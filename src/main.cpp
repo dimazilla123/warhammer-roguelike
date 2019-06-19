@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     AsciiComponent *ac = new AsciiComponent('@');
     e.addComponent(std::type_index(typeid(AsciiComponent)), ac);
     addch(e.get<AsciiComponent>()->getChar());
+    getch();
 
     endwin();
 

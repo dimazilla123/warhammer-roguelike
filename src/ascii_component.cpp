@@ -9,3 +9,13 @@ char AsciiComponent::getChar() const
 {
     return c;
 }
+
+void AsciiComponent::setLevel(int l)
+{
+    level = l;
+}
+
+int AsciiComponent::getLevel() const
+{
+    return level;
+}
