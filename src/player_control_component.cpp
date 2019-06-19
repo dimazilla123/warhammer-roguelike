@@ -3,7 +3,7 @@
 #include <ncurses.h>
 #include "map.h"
 
-PlayerControlComponent::PlayerControlComponent()
+PlayerControlComponent::PlayerControlComponent(Game *g) : game(g)
 {
     initscr();
     noecho();
@@ -27,6 +27,24 @@ std::pair<int, int> PlayerControlComponent::move(const Map &m)
             }
         }
     }
-    getch();
-    return std::make_pair(0, 0);
+    char c = getch();
+    switch (c) {
+        case 'q':
+            game->exit();
+            break;
+        case 'h':
+            return std::make_pair(0, -1);
+            break;
+        case 'l':
+            return std::make_pair(0, 1);
+            break;
+        case 'k':
+            return std::make_pair(-1, 0);
+            break;
+        case 'j':
+            return std::make_pair(1, 0);
+            break;
+        default:
+            return std::make_pair(0, 0);
+    }
 }

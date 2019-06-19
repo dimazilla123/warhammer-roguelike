@@ -2,5 +2,6 @@
 
 std::pair<int, int> MonsterControlComponent::move(const Map &m)
 {
-    return std::make_pair(0, 0);
+    turn ^= 1;
+    return ret[turn ^ 1];
 }
