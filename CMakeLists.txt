@@ -16,6 +16,7 @@ set(GAME_SRC
     src/monster_control_component.cpp
     src/player_control_component.cpp
     src/map.cpp
+    src/game.cpp
     )
 
 add_executable(game ${GAME_SRC})
