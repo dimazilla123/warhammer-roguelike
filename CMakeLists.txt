@@ -14,4 +14,5 @@ set(GAME_SRC
     src/ascii_component.cpp
     )
 
-add_executable(game ${GAME_SRC} ${CURSES_LIBRARIES})
+add_executable(game ${GAME_SRC})
+target_link_libraries(game ${CURSES_LIBRARIES})
