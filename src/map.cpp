@@ -2,6 +2,7 @@
 #include "control_component.h"
 #include "ascii_component.h"
 #include <algorithm>
+#include <unordered_set>
 
 Map::Map(size_t h, size_t w)
 {
@@ -45,9 +46,13 @@ void Map::removeEntity(size_t x, size_t y, Entity *e)
 
 void Map::update()
 {
+    std::unordered_set<Entity*> updated;
     for (int i = 0; i < entities.size(); i++) {
         for (int j = 0; j < entities[i].size(); j++) {
             for (auto e : entities[i][j]) {
+                if (updated.find(e) != updated.end())
+                    continue;
+                updated.insert(e);
                 auto cc = e->get<ControlComponent>();
                 if (cc) {
                     auto [dx, dy] = cc->move(*this);
