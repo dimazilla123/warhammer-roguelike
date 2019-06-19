@@ -9,6 +9,8 @@ public:
     ~Game();
     void gameLoop();
     void exit();
+    int getHeight() const;
+    int getWidth() const;
 private:
     bool to_exit = false;
     Map *map;

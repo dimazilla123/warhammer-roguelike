@@ -10,7 +10,8 @@ Game::Game(size_t h, size_t w)
     map->addEntity(0, 0, create_player());
     map->addEntity(4, 4, create_monster());
     map->addEntity(5, 4, create_monster());
-    map->addEntity(4, 5, create_monster());
+    Entity *e = create_monster();
+    map->addEntity(4, 5, e);
 }
 
 Game::~Game()
@@ -43,4 +44,14 @@ void Game::gameLoop()
 {
     while (!to_exit)
         map->update();
+}
+
+int Game::getHeight() const
+{
+    return map->entities.size();
+}
+
+int Game::getWidth() const
+{
+    return map->entities[0].size();
 }
