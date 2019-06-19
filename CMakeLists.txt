@@ -12,6 +12,11 @@ set(GAME_SRC
     src/main.cpp
     src/entity.cpp
     src/ascii_component.cpp
+    src/control_component.cpp
+    src/monster_control_component.cpp
+    src/player_control_component.cpp
+    src/map.cpp
     )
 
-add_executable(game ${GAME_SRC} ${CURSES_LIBRARIES})
+add_executable(game ${GAME_SRC})
+target_link_libraries(game ${CURSES_LIBRARIES})
