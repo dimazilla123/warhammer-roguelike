@@ -27,5 +27,6 @@ std::pair<int, int> PlayerControlComponent::move(const Map &m)
             }
         }
     }
+    getch();
     return std::make_pair(0, 0);
 }
