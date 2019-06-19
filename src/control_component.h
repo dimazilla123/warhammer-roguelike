@@ -2,6 +2,7 @@
 #define CONTROL_COMPONENT_H
 
 #include "component.h"
+#include <utility>
 
 class Map;
 
