@@ -56,7 +56,7 @@ void Map::update()
                     if (0 <= x && x < entities.size() &&
                         0 <= y && y < entities[0].size()) {
                         addEntity(x, y, e);
-                        removeEntity(x, y, e);
+                        removeEntity(i, j, e);
                     }
                 }
             }
