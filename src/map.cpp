@@ -16,7 +16,7 @@ Map::~Map()
                 delete e;
 }
 
-void Map::add_entity(size_t x, size_t y, Entity *e)
+void Map::addEntity(size_t x, size_t y, Entity *e)
 {
     int l = 0, r = entities[x][y].size();
     int e_lev = 0;
@@ -37,7 +37,7 @@ void Map::add_entity(size_t x, size_t y, Entity *e)
     entities[x][y].insert(entities[x][y].begin() + l, e);
 }
 
-void Map::remove_entity(size_t x, size_t y, Entity *e)
+void Map::removeEntity(size_t x, size_t y, Entity *e)
 {
     entities[x][y].erase(std::find(entities[x][y].begin(),
                                    entities[x][y].end(), e));
@@ -55,8 +55,8 @@ void Map::update()
                     int y = j + dy;
                     if (0 <= x && x < entities.size() &&
                         0 <= y && y < entities[0].size()) {
-                        add_entity(x, y, e);
-                        remove_entity(x, y, e);
+                        addEntity(x, y, e);
+                        removeEntity(x, y, e);
                     }
                 }
             }
