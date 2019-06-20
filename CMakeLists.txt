@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(chiki_briki)
+project(warhammer-roguelike)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Curses REQUIRED)
@@ -17,6 +17,8 @@ set(GAME_SRC
     src/player_control_component.cpp
     src/map.cpp
     src/game.cpp
+    src/move_event.cpp
+    src/control_event.cpp
     )
 
 add_executable(game ${GAME_SRC})

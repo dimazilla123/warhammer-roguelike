@@ -3,6 +3,7 @@
 
 #include "map.h"
 
+
 class Game {
 public:
     Game(size_t h, size_t w);

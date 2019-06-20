@@ -3,6 +3,22 @@
 
 #include "entity.h"
 #include <vector>
+#include "event.h"
+#include "move_event.h"
+#include "control_event.h"
+#include <queue>
+#include <functional>
+
+class Map;
+
+using HandlerFunction = std::function<void(Map*, Event*)>;
+
+struct CompEvPtrs {
+    bool operator()(Event *a, Event *b) const
+    {
+        return a->getTime() < b->getTime();
+    }
+};
 
 class Map {
 public:
@@ -12,6 +28,14 @@ public:
     void removeEntity(size_t x, size_t y, Entity *e);
     void update();
     std::vector<std::vector<std::vector<Entity*>>> entities;
+    void nextTurn();
+private:
+    std::priority_queue<Event*, std::vector<Event*>, CompEvPtrs> ev_q;
+    std::map<std::type_index, HandlerFunction> handlers;
+    unsigned long long turn = 0;
 };
+
+void controlHandler(Map *m, Event *e);
+void moveHandler(Map *m, Event *e);
 
 #endif

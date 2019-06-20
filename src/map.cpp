@@ -7,6 +7,8 @@
 Map::Map(size_t h, size_t w)
 {
     entities.resize(h, std::vector<std::vector<Entity*>>(w));
+    handlers[std::type_index(typeid(ControlEvent))] = controlHandler;
+    handlers[std::type_index(typeid(MoveEvent))] = moveHandler;
 }
 
 Map::~Map()
@@ -36,6 +38,7 @@ void Map::addEntity(size_t x, size_t y, Entity *e)
             r = m;
     }
     entities[x][y].insert(entities[x][y].begin() + l, e);
+    ev_q.push(new ControlEvent(e, turn));
 }
 
 void Map::removeEntity(size_t x, size_t y, Entity *e)
@@ -67,4 +70,9 @@ void Map::update()
             }
         }
     }
+}
+
+void Map::nextTurn()
+{
+    ++turn;
 }
