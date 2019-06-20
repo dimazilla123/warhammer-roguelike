@@ -10,9 +10,9 @@ PlayerControlComponent::PlayerControlComponent(Game *g) : game(g)
     curs_set(0);
     h = g->getHeight();
     w = g->getWidth();
-    messageline = newwin(3, w, 1, 1);
-    field = newwin(h, w, 4, 1);
-    statline = newwin(3, w, h + 4, 1);
+    messageline = newwin(3, w + 2, 1, 1);
+    field = newwin(h + 2, w + 2, 4, 1);
+    statline = newwin(3, w + 2, h + 6, 1);
 }
 
 PlayerControlComponent::~PlayerControlComponent()
