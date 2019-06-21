@@ -1,6 +1,7 @@
 #include "map.h"
 #include "control_component.h"
 #include "ascii_component.h"
+#include "close_event.h"
 #include <algorithm>
 #include <unordered_set>
 #include <iostream>
@@ -10,6 +11,7 @@ Map::Map(size_t h, size_t w)
     entities.resize(h, std::vector<std::vector<Entity*>>(w));
     handlers[std::type_index(typeid(ControlEvent))] = controlHandler;
     handlers[std::type_index(typeid(MoveEvent))] = moveHandler;
+    handlers[std::type_index(typeid(CloseEvent))] = closeHandler;
 }
 
 Map::~Map()
@@ -62,31 +64,6 @@ void Map::removeEntity(std::pair<int, int> pos, Entity *e)
     removeEntity(x, y, e);
 }
 
-void Map::update()
-{
-    std::unordered_set<Entity*> updated;
-    for (int i = 0; i < entities.size(); i++) {
-        for (int j = 0; j < entities[i].size(); j++) {
-            for (auto e : entities[i][j]) {
-                if (updated.find(e) != updated.end())
-                    continue;
-                updated.insert(e);
-                auto cc = e->get<ControlComponent>();
-                if (cc) {
-                    auto [dx, dy] = cc->move(*this);
-                    int x = i + dx;
-                    int y = j + dy;
-                    if (0 <= x && x < entities.size() &&
-                        0 <= y && y < entities[0].size()) {
-                        addEntity(x, y, e);
-                        removeEntity(i, j, e);
-                    }
-                }
-            }
-        }
-    }
-}
-
 void Map::nextTurn()
 {
     turn = nextTurn(turn);
@@ -109,8 +86,10 @@ bool Map::processEvent()
     Event *e = ev_q.top();
     ev_q.pop();
     //std::cerr << "Handelling " << typeid(*e).name() << "\n";
-    handlers[std::type_index(typeid(*e))](this, e);
-    delete e;
+    if (e) {
+        handlers[std::type_index(typeid(*e))](this, e);
+        delete e;
+    }
     return true;
 }
 
@@ -144,4 +123,10 @@ void moveHandler(Map *m, Event *e)
             cc->setPos(ev->targ_pos);
         }
     }
+}
+
+void closeHandler(Map *m, Event* e)
+{
+    CloseEvent *ev = static_cast<CloseEvent*>(e);
+    ev->getGame()->exit();
 }

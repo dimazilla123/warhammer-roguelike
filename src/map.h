@@ -28,7 +28,6 @@ public:
     void removeEntity(size_t x, size_t y, Entity *e);
     void addEntity(std::pair<int, int> pos, Entity *e);
     void removeEntity(std::pair<int, int> pos, Entity *e);
-    void update();
     std::vector<std::vector<std::vector<Entity*>>> entities;
     void nextTurn();
     unsigned long long nextTurn(unsigned long long t) const;
@@ -43,5 +42,6 @@ private:
 
 void controlHandler(Map *m, Event *e);
 void moveHandler(Map *m, Event *e);
+void closeHandler(Map *m, Event *e);
 
 #endif

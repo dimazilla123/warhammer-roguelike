@@ -1,5 +1,7 @@
 #include "player_control_component.h"
 #include "ascii_component.h"
+#include "close_event.h"
+#include "move_event.h"
 #include <ncurses.h>
 #include "map.h"
 
@@ -21,7 +23,7 @@ PlayerControlComponent::~PlayerControlComponent()
     endwin();
 }
 
-std::pair<int, int> PlayerControlComponent::move(const Map &m)
+Event *PlayerControlComponent::makeTurn(const Map &m)
 {
     refresh();
     wclear(field);
@@ -40,7 +42,7 @@ std::pair<int, int> PlayerControlComponent::move(const Map &m)
     auto ret = std::make_pair(0, 0);
     switch (c) {
         case 'q':
-            game->exit();
+            return new CloseEvent(game);
             break;
         case 'h':
             ret = std::make_pair(0, -1);
@@ -61,7 +63,10 @@ std::pair<int, int> PlayerControlComponent::move(const Map &m)
     wrefresh(messageline);
     box(statline, 0, 0);
     wrefresh(statline);
-    return ret;
+    auto next = pos;
+    next.first += ret.first;
+    next.second += ret.second;
+    return new MoveEvent(pos, next, e, m.nextTurn(m.getTurn()));
 }
 
 void PlayerControlComponent::pullMessage(const std::string &s)

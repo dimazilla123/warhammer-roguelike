@@ -10,6 +10,7 @@ public:
     PlayerControlComponent(Game *g, std::pair<int, int> pos);
     ~PlayerControlComponent();
     std::pair<int, int> move(const Map &m);
+    Event *makeTurn(const Map &m);
     void pullMessage(const std::string &s);
 private:
     int h, w;

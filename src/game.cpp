@@ -44,9 +44,8 @@ void Game::exit()
 void Game::gameLoop()
 {
     while (!to_exit)
-        to_exit = !map->processEvent();
-    while (!to_exit)
-        map->update();
+        if (!map->processEvent())
+            to_exit = true;
 }
 
 int Game::getHeight() const

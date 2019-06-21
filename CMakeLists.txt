@@ -19,6 +19,7 @@ set(GAME_SRC
     src/game.cpp
     src/move_event.cpp
     src/control_event.cpp
+    src/close_event.cpp
     )
 
 add_executable(game ${GAME_SRC})
