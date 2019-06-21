@@ -26,9 +26,15 @@ public:
     ~Map();
     void addEntity(size_t x, size_t y, Entity *e);
     void removeEntity(size_t x, size_t y, Entity *e);
+    void addEntity(std::pair<int, int> pos, Entity *e);
+    void removeEntity(std::pair<int, int> pos, Entity *e);
     void update();
     std::vector<std::vector<std::vector<Entity*>>> entities;
     void nextTurn();
+    unsigned long long nextTurn(unsigned long long t) const;
+    unsigned long long getTurn() const { return turn; }
+    void pushEvent(Event *e);
+    void processEvent();
 private:
     std::priority_queue<Event*, std::vector<Event*>, CompEvPtrs> ev_q;
     std::map<std::type_index, HandlerFunction> handlers;

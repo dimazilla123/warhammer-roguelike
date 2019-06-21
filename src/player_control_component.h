@@ -7,7 +7,7 @@
 
 class PlayerControlComponent : public ControlComponent {
 public:
-    PlayerControlComponent(Game *g);
+    PlayerControlComponent(Game *g, std::pair<int, int> pos);
     ~PlayerControlComponent();
     std::pair<int, int> move(const Map &m);
     void pullMessage(const std::string &s);

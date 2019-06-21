@@ -3,7 +3,8 @@
 #include <ncurses.h>
 #include "map.h"
 
-PlayerControlComponent::PlayerControlComponent(Game *g) : game(g)
+PlayerControlComponent::PlayerControlComponent(Game *g, std::pair<int, int> pos) : ControlComponent(pos),
+    game(g)
 {
     initscr();
     noecho();
