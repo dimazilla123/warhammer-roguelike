@@ -7,11 +7,8 @@
 Game::Game(size_t h, size_t w)
 {
     map = new Map(h, w);
-    map->addEntity(0, 0, create_player());
-    map->addEntity(4, 4, create_monster());
-    map->addEntity(5, 4, create_monster());
-    Entity *e = create_monster();
-    map->addEntity(4, 5, e);
+    create_player(5, 5);
+    create_monster(10, 10);
 }
 
 Game::~Game()
@@ -19,19 +16,23 @@ Game::~Game()
     delete map;
 }
 
-Entity *Game::create_monster()
+Entity *Game::create_monster(int x, int y)
 {
     Entity *e = new Entity;
-    e->addComponent(std::type_index(typeid(ControlComponent)), new MonsterControlComponent());
+    auto pos = std::make_pair(x, y);
+    e->addComponent(std::type_index(typeid(ControlComponent)), new MonsterControlComponent(pos));
     e->addComponent(std::type_index(typeid(AsciiComponent)), new AsciiComponent('M', 2));
+    map->addEntity(pos, e);
     return e;
 }
 
-Entity *Game::create_player()
+Entity *Game::create_player(int x, int y)
 {
     Entity *e = new Entity;
-    e->addComponent(std::type_index(typeid(ControlComponent)), new PlayerControlComponent(this));
+    auto pos = std::make_pair(x, y);
+    e->addComponent(std::type_index(typeid(ControlComponent)), new PlayerControlComponent(this, pos));
     e->addComponent(std::type_index(typeid(AsciiComponent)), new AsciiComponent('@', 2));
+    map->addEntity(pos, e);
     return e;
 }
 
@@ -42,6 +43,8 @@ void Game::exit()
 
 void Game::gameLoop()
 {
+    while (!to_exit)
+        to_exit = !map->processEvent();
     while (!to_exit)
         map->update();
 }

@@ -34,7 +34,7 @@ public:
     unsigned long long nextTurn(unsigned long long t) const;
     unsigned long long getTurn() const { return turn; }
     void pushEvent(Event *e);
-    void processEvent();
+    bool processEvent();
 private:
     std::priority_queue<Event*, std::vector<Event*>, CompEvPtrs> ev_q;
     std::map<std::type_index, HandlerFunction> handlers;

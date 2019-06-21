@@ -3,6 +3,7 @@
 #include "ascii_component.h"
 #include <algorithm>
 #include <unordered_set>
+#include <iostream>
 
 Map::Map(size_t h, size_t w)
 {
@@ -43,8 +44,10 @@ void Map::addEntity(size_t x, size_t y, Entity *e)
 
 void Map::removeEntity(size_t x, size_t y, Entity *e)
 {
-    entities[x][y].erase(std::find(entities[x][y].begin(),
-                                   entities[x][y].end(), e));
+    auto it = std::find(entities[x][y].begin(),
+                        entities[x][y].end(), e);
+    if (it != entities[x][y].end())
+        entities[x][y].erase(it);
 }
 
 void Map::addEntity(std::pair<int, int> pos, Entity *e)
@@ -91,7 +94,7 @@ void Map::nextTurn()
 
 unsigned long long Map::nextTurn(unsigned long long t) const
 {
-    return t++;
+    return ++t;
 }
 
 void Map::pushEvent(Event *e)
@@ -99,11 +102,16 @@ void Map::pushEvent(Event *e)
     ev_q.push(e);
 }
 
-void Map::processEvent()
+bool Map::processEvent()
 {
+    if (ev_q.empty())
+        return false;
     Event *e = ev_q.top();
     ev_q.pop();
-    handlers[std::type_index(typeid(ev_q))](this, e);
+    //std::cerr << "Handelling " << typeid(*e).name() << "\n";
+    handlers[std::type_index(typeid(*e))](this, e);
+    delete e;
+    return true;
 }
 
 void controlHandler(Map *m, Event *e)
@@ -113,6 +121,9 @@ void controlHandler(Map *m, Event *e)
     auto cc = ent->get<ControlComponent>();
     if (cc) {
         Event *add = cc->makeTurn(*m);
+        m->pushEvent(add);
+        Event *ce = new ControlEvent(ent, add->getTime());
+        m->pushEvent(ce);
     }
 }
 
@@ -128,5 +139,9 @@ void moveHandler(Map *m, Event *e)
     if (check_bounds(ev->start_pos) && check_bounds(ev->targ_pos)) {
         m->removeEntity(ev->start_pos, ent);
         m->addEntity(ev->targ_pos, ent);
+        auto cc = ent->get<ControlComponent>();
+        if (cc) {
+            cc->setPos(ev->targ_pos);
+        }
     }
 }

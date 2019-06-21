@@ -16,8 +16,8 @@ private:
     bool to_exit = false;
     Map *map;
 
-    Entity *create_monster();
-    Entity *create_player();
+    Entity *create_monster(int x, int y);
+    Entity *create_player(int x, int y);
 };
 
 #endif
