@@ -21,6 +21,7 @@ set(GAME_SRC
     src/control_event.cpp
     src/close_event.cpp
     src/event_comparator.cpp
+    src/move_handler.cpp
     )
 
 add_executable(game ${GAME_SRC})

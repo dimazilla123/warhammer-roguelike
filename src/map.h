@@ -6,6 +6,7 @@
 #include "move_event.h"
 #include "control_event.h"
 #include "event_comparator.h"
+#include "move_handler.h"
 
 #include <vector>
 #include <queue>
@@ -24,6 +25,7 @@ public:
     void addEntity(std::pair<int, int> pos, Entity *e);
     void removeEntity(std::pair<int, int> pos, Entity *e);
     std::vector<std::vector<std::vector<Entity*>>> entities;
+    std::map<Entity*, std::pair<int, int>> positions;
     void nextTurn();
     unsigned long long nextTurn(unsigned long long t) const;
     unsigned long long getTurn() const { return turn; }
@@ -36,7 +38,6 @@ private:
 };
 
 void controlHandler(Map *m, Event *e);
-void moveHandler(Map *m, Event *e);
 void closeHandler(Map *m, Event *e);
 
 #endif
