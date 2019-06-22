@@ -1,12 +1,17 @@
 #include "map.h"
 #include "control_component.h"
 #include "ascii_component.h"
+#include "close_event.h"
 #include <algorithm>
 #include <unordered_set>
+#include <iostream>
 
 Map::Map(size_t h, size_t w)
 {
     entities.resize(h, std::vector<std::vector<Entity*>>(w));
+    handlers[std::type_index(typeid(ControlEvent))] = controlHandler;
+    handlers[std::type_index(typeid(MoveEvent))] = moveHandler;
+    handlers[std::type_index(typeid(CloseEvent))] = closeHandler;
 }
 
 Map::~Map()
@@ -36,35 +41,96 @@ void Map::addEntity(size_t x, size_t y, Entity *e)
             r = m;
     }
     entities[x][y].insert(entities[x][y].begin() + l, e);
+    ev_q.push(new ControlEvent(e, turn));
 }
 
 void Map::removeEntity(size_t x, size_t y, Entity *e)
 {
-    entities[x][y].erase(std::find(entities[x][y].begin(),
-                                   entities[x][y].end(), e));
+    auto it = std::find(entities[x][y].begin(),
+                        entities[x][y].end(), e);
+    if (it != entities[x][y].end())
+        entities[x][y].erase(it);
 }
 
-void Map::update()
+void Map::addEntity(std::pair<int, int> pos, Entity *e)
 {
-    std::unordered_set<Entity*> updated;
-    for (int i = 0; i < entities.size(); i++) {
-        for (int j = 0; j < entities[i].size(); j++) {
-            for (auto e : entities[i][j]) {
-                if (updated.find(e) != updated.end())
-                    continue;
-                updated.insert(e);
-                auto cc = e->get<ControlComponent>();
-                if (cc) {
-                    auto [dx, dy] = cc->move(*this);
-                    int x = i + dx;
-                    int y = j + dy;
-                    if (0 <= x && x < entities.size() &&
-                        0 <= y && y < entities[0].size()) {
-                        addEntity(x, y, e);
-                        removeEntity(i, j, e);
-                    }
-                }
-            }
+    auto [x, y] = pos;
+    addEntity(x, y, e);
+}
+
+void Map::removeEntity(std::pair<int, int> pos, Entity *e)
+{
+    auto [x, y] = pos;
+    removeEntity(x, y, e);
+}
+
+void Map::nextTurn()
+{
+    turn = nextTurn(turn);
+}
+
+unsigned long long Map::nextTurn(unsigned long long t) const
+{
+    return ++t;
+}
+
+void Map::pushEvent(Event *e)
+{
+    ev_q.push(e);
+}
+
+bool Map::processEvent()
+{
+    if (ev_q.empty())
+        return false;
+    Event *e = ev_q.top();
+    ev_q.pop();
+    if (e) {
+        std::cerr << "Handelling " << typeid(*e).name() << " at " <<
+           e->getTime() << "\n";
+        handlers[std::type_index(typeid(*e))](this, e);
+        turn = e->getTime();
+        delete e;
+    }
+    return true;
+}
+
+void controlHandler(Map *m, Event *e)
+{
+    ControlEvent *ev = static_cast<ControlEvent*>(e);
+    Entity *ent = ev->e;
+    auto cc = ent->get<ControlComponent>();
+    if (cc) {
+        Event *add = cc->makeTurn(*m);
+        m->pushEvent(add);
+        //Event *ce = new ControlEvent(ent, add->getTime());
+        //m->pushEvent(ce);
+    }
+}
+
+void moveHandler(Map *m, Event *e)
+{
+    MoveEvent *ev = static_cast<MoveEvent*>(e);
+    Entity *ent = ev->subject;
+    auto check_bounds = [m](const std::pair<int, int> &pos) {
+        auto [x, y] = pos;
+        return 0 <= x && x < m->entities.size() &&
+               0 <= y && y < m->entities[0].size();
+    };
+    if (check_bounds(ev->start_pos) && check_bounds(ev->targ_pos)) {
+        m->removeEntity(ev->start_pos, ent);
+        m->addEntity(ev->targ_pos, ent);
+        auto cc = ent->get<ControlComponent>();
+        if (cc) {
+            cc->setPos(ev->targ_pos);
+            Event *ce = new ControlEvent(ent, e->getTime());
+            m->pushEvent(ce);
         }
     }
+}
+
+void closeHandler(Map *m, Event* e)
+{
+    CloseEvent *ev = static_cast<CloseEvent*>(e);
+    ev->getGame()->exit();
 }

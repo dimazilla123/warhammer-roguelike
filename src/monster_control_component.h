@@ -6,6 +6,8 @@
 class MonsterControlComponent : public ControlComponent {
 public:
     std::pair<int, int> move(const Map &m);
+    Event *makeTurn(const Map &m);
+    MonsterControlComponent(std::pair<int, int> pos) : ControlComponent(pos) {}
 private:
     int turn = 0;
     std::pair<int, int> ret[2] = {
