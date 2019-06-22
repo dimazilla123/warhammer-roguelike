@@ -6,7 +6,7 @@
 
 class CloseEvent : public Event {
 public:
-    CloseEvent(Game *g_) : g(g_) {};
+    CloseEvent(Game *g_, unsigned long long t_) : g(g_) { t = t_; };
     Game *getGame() const;
     void setGame(Game *m);
 private:

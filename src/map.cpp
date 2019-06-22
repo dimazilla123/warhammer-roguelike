@@ -85,9 +85,11 @@ bool Map::processEvent()
         return false;
     Event *e = ev_q.top();
     ev_q.pop();
-    //std::cerr << "Handelling " << typeid(*e).name() << "\n";
     if (e) {
+        std::cerr << "Handelling " << typeid(*e).name() << " at " <<
+           e->getTime() << "\n";
         handlers[std::type_index(typeid(*e))](this, e);
+        turn = e->getTime();
         delete e;
     }
     return true;
@@ -101,8 +103,8 @@ void controlHandler(Map *m, Event *e)
     if (cc) {
         Event *add = cc->makeTurn(*m);
         m->pushEvent(add);
-        Event *ce = new ControlEvent(ent, add->getTime());
-        m->pushEvent(ce);
+        //Event *ce = new ControlEvent(ent, add->getTime());
+        //m->pushEvent(ce);
     }
 }
 
@@ -121,6 +123,8 @@ void moveHandler(Map *m, Event *e)
         auto cc = ent->get<ControlComponent>();
         if (cc) {
             cc->setPos(ev->targ_pos);
+            Event *ce = new ControlEvent(ent, e->getTime());
+            m->pushEvent(ce);
         }
     }
 }

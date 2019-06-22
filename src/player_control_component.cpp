@@ -42,7 +42,7 @@ Event *PlayerControlComponent::makeTurn(const Map &m)
     auto ret = std::make_pair(0, 0);
     switch (c) {
         case 'q':
-            return new CloseEvent(game);
+            return new CloseEvent(game, 0);
             break;
         case 'h':
             ret = std::make_pair(0, -1);
