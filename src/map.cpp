@@ -123,10 +123,10 @@ void moveHandler(Map *m, Event *e)
         auto cc = ent->get<ControlComponent>();
         if (cc) {
             cc->setPos(ev->targ_pos);
-            Event *ce = new ControlEvent(ent, e->getTime());
-            m->pushEvent(ce);
         }
     }
+    Event *ce = new ControlEvent(ent, e->getTime());
+    m->pushEvent(ce);
 }
 
 void closeHandler(Map *m, Event* e)
