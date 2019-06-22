@@ -23,6 +23,8 @@ Entity *Game::create_monster(int x, int y)
     e->addComponent(std::type_index(typeid(ControlComponent)), new MonsterControlComponent(pos));
     e->addComponent(std::type_index(typeid(AsciiComponent)), new AsciiComponent('M', 2));
     map->addEntity(pos, e);
+    map->pushEvent(new ControlEvent(e, map->getTurn()));
+    map->nextTurn();
     return e;
 }
 
@@ -33,6 +35,8 @@ Entity *Game::create_player(int x, int y)
     e->addComponent(std::type_index(typeid(ControlComponent)), new PlayerControlComponent(this, pos));
     e->addComponent(std::type_index(typeid(AsciiComponent)), new AsciiComponent('@', 2));
     map->addEntity(pos, e);
+    map->pushEvent(new ControlEvent(e, map->getTurn()));
+    map->nextTurn();
     return e;
 }
 

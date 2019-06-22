@@ -41,7 +41,7 @@ void Map::addEntity(size_t x, size_t y, Entity *e)
             r = m;
     }
     entities[x][y].insert(entities[x][y].begin() + l, e);
-    ev_q.push(new ControlEvent(e, turn));
+    //ev_q.push(new ControlEvent(e, turn));
 }
 
 void Map::removeEntity(size_t x, size_t y, Entity *e)
