@@ -8,6 +8,7 @@
 #include "event_comparator.h"
 #include "move_handler.h"
 #include "control_handler.h"
+#include "close_handler.h"
 
 #include <vector>
 #include <queue>
@@ -37,7 +38,5 @@ private:
     std::map<std::type_index, HandlerFunction> handlers;
     unsigned long long turn = 0;
 };
-
-void closeHandler(Map *m, Event *e);
 
 #endif

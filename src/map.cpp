@@ -95,8 +95,3 @@ bool Map::processEvent()
     return true;
 }
 
-void closeHandler(Map *m, Event* e)
-{
-    CloseEvent *ev = static_cast<CloseEvent*>(e);
-    ev->getGame()->exit();
-}
