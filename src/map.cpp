@@ -95,19 +95,6 @@ bool Map::processEvent()
     return true;
 }
 
-void controlHandler(Map *m, Event *e)
-{
-    ControlEvent *ev = static_cast<ControlEvent*>(e);
-    Entity *ent = ev->e;
-    auto cc = ent->get<ControlComponent>();
-    if (cc) {
-        Event *add = cc->makeTurn(*m);
-        m->pushEvent(add);
-        //Event *ce = new ControlEvent(ent, add->getTime());
-        //m->pushEvent(ce);
-    }
-}
-
 void closeHandler(Map *m, Event* e)
 {
     CloseEvent *ev = static_cast<CloseEvent*>(e);

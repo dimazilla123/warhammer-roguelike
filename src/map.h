@@ -7,6 +7,7 @@
 #include "control_event.h"
 #include "event_comparator.h"
 #include "move_handler.h"
+#include "control_handler.h"
 
 #include <vector>
 #include <queue>
@@ -37,7 +38,6 @@ private:
     unsigned long long turn = 0;
 };
 
-void controlHandler(Map *m, Event *e);
 void closeHandler(Map *m, Event *e);
 
 #endif
