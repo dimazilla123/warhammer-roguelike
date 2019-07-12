@@ -2,6 +2,7 @@
 #include "control_component.h"
 #include "monster_control_component.h"
 #include "player_control_component.h"
+#include "collide_component.h"
 #include "ascii_component.h"
 
 Game::Game(size_t h, size_t w)
@@ -9,6 +10,8 @@ Game::Game(size_t h, size_t w)
     map = new Map(h, w);
     create_player(5, 5);
     create_monster(10, 10);
+    create_monster(20, 10);
+    create_monster(10, 20);
 }
 
 Game::~Game()
@@ -22,9 +25,10 @@ Entity *Game::create_monster(int x, int y)
     auto pos = std::make_pair(x, y);
     e->addComponent(std::type_index(typeid(ControlComponent)), new MonsterControlComponent(pos));
     e->addComponent(std::type_index(typeid(AsciiComponent)), new AsciiComponent('M', 2));
+    e->addComponent(std::type_index(typeid(CollideComponent)), new CollideComponent(CollisionType::CANNOT_PASS));
     map->addEntity(pos, e);
     map->pushEvent(new ControlEvent(e, map->getTurn()));
-    map->nextTurn();
+    //map->nextTurn();
     return e;
 }
 
@@ -34,9 +38,10 @@ Entity *Game::create_player(int x, int y)
     auto pos = std::make_pair(x, y);
     e->addComponent(std::type_index(typeid(ControlComponent)), new PlayerControlComponent(this, pos));
     e->addComponent(std::type_index(typeid(AsciiComponent)), new AsciiComponent('@', 2));
+    e->addComponent(std::type_index(typeid(CollideComponent)), new CollideComponent(CollisionType::CANNOT_PASS));
     map->addEntity(pos, e);
     map->pushEvent(new ControlEvent(e, map->getTurn()));
-    map->nextTurn();
+    //map->nextTurn();
     return e;
 }
 
