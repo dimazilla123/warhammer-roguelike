@@ -9,6 +9,8 @@
 #include "move_handler.h"
 #include "control_handler.h"
 #include "close_handler.h"
+#include "collide_handler.h"
+#include "collide_event.h"
 
 #include <vector>
 #include <queue>

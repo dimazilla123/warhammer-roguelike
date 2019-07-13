@@ -12,6 +12,9 @@ Game::Game(size_t h, size_t w)
     create_monster(10, 10);
     create_monster(20, 10);
     create_monster(10, 20);
+    create_wall(8, 8);
+    create_wall(8, 9);
+    create_wall(8, 10);
 }
 
 Game::~Game()
@@ -41,6 +44,17 @@ Entity *Game::create_player(int x, int y)
     e->addComponent(std::type_index(typeid(CollideComponent)), new CollideComponent(CollisionType::CANNOT_PASS));
     map->addEntity(pos, e);
     map->pushEvent(new ControlEvent(e, map->getTurn()));
+    //map->nextTurn();
+    return e;
+}
+
+Entity *Game::create_wall(int x, int y)
+{
+    Entity *e = new Entity;
+    auto pos = std::make_pair(x, y);
+    e->addComponent(std::type_index(typeid(AsciiComponent)), new AsciiComponent('#', 2));
+    e->addComponent(std::type_index(typeid(CollideComponent)), new CollideComponent(CollisionType::CANNOT_PASS));
+    map->addEntity(pos, e);
     //map->nextTurn();
     return e;
 }

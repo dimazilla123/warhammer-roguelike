@@ -12,6 +12,7 @@ Map::Map(size_t h, size_t w)
     handlers[std::type_index(typeid(ControlEvent))] = controlHandler;
     handlers[std::type_index(typeid(MoveEvent))] = moveHandler;
     handlers[std::type_index(typeid(CloseEvent))] = closeHandler;
+    handlers[std::type_index(typeid(CollideEvent))] = collideHandler;
 }
 
 Map::~Map()
@@ -71,7 +72,7 @@ void Map::nextTurn()
 
 unsigned long long Map::nextTurn(unsigned long long t) const
 {
-    return ++t;
+    return t += 10;
 }
 
 void Map::pushEvent(Event *e)
@@ -88,7 +89,9 @@ bool Map::processEvent()
     if (e) {
         std::cerr << "Handelling " << typeid(*e).name() << " at " <<
            e->getTime() << "\n";
-        handlers[std::type_index(typeid(*e))](this, e);
+        auto it = handlers.find(std::type_index(typeid(*e)));
+        if (it != handlers.end())
+            (it->second)(this, e);
         turn = e->getTime();
         delete e;
     }

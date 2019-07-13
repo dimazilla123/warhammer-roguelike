@@ -18,6 +18,7 @@ private:
 
     Entity *create_monster(int x, int y);
     Entity *create_player(int x, int y);
+    Entity *create_wall(int x, int y);
 };
 
 #endif

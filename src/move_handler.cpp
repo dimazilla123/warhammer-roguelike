@@ -1,6 +1,7 @@
 #include "move_handler.h"
 #include "control_component.h"
 #include "collide_component.h"
+#include "collide_event.h"
 #include "map.h"
 
 bool is_passable(Map *m, std::pair<int, int> pos)
@@ -31,6 +32,12 @@ void moveHandler(Map *m, Event *e)
             cc->setPos(ev->targ_pos);
         }
     }
+    if (check_bounds(ev->targ_pos))
+        for (auto w : m->entities[ev->targ_pos.first][ev->targ_pos.second]) {
+            if (w->get<CollideComponent>()) {
+                m->pushEvent(new CollideEvent(ent, w, e->getTime()));
+            }
+        }
     Event *ce = new ControlEvent(ent, e->getTime());
     m->pushEvent(ce);
 }
