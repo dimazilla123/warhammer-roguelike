@@ -1,3 +1,5 @@
 ### Description
 
-This is warhammer roguelike
+This is warhammer roguelike.
+
+Added changes.
